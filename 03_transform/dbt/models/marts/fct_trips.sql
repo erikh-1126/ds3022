@@ -1,8 +1,20 @@
 -- Fact table: one row per trip, with derived metrics computed once
 -- here so every downstream model/query reuses the same definitions.
+--
+-- Incremental: the first build (or `dbt build --full-refresh`) loads every
+-- parquet file; later builds append only rows from files not already in
+-- this table, so adding a new month doesn't reprocess the whole year.
+-- Rebuild with --full-refresh after changing staging/derivation logic or
+-- replacing an already-loaded file — incremental runs won't pick those up.
+
+{{ config(materialized='incremental') }}
 
 with trips as (
     select * from {{ ref('stg_yellow_tripdata') }}
+    {% if is_incremental() %}
+    -- {{ this }} = the existing fct_trips table
+    where source_file not in (select distinct source_file from {{ this }})
+    {% endif %}
 ),
 
 derived as (

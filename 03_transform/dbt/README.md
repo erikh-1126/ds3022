@@ -27,13 +27,21 @@ nyc_taxi_dbt/
 │       ├── mart_daily_summary.sql        # daily volume, revenue, speed
 │       ├── mart_speed_by_hour_dow.sql    # speed by day of week x hour
 │       ├── mart_location_rankings.sql    # top/bottom 10 zones by pickups/dropoffs
+│       ├── mart_dow_summary.sql          # volume/fare/tips by day of week
+│       ├── mart_trip_distance_distribution.sql  # 1-mile distance histogram
+│       ├── mart_tips_by_payment_type.sql # tipping by payment type
+│       ├── mart_fare_efficiency.sql      # $/mile and $/minute by distance band
+│       ├── mart_top_corridors.sql        # top 25 pickup -> dropoff zone pairs
+│       ├── mart_passenger_count.sql      # trip traits by passenger count
+│       ├── mart_vendor_comparison.sql    # per-vendor metrics
 │       └── schema.yml
 ├── packages.yml                # dbt_utils, installed with `dbt deps`
 ├── plots/                      # scripts that chart the marts (output PNGs are git-ignored)
 └── tests/
     ├── assert_no_zero_or_null_trips.sql       # business-rule test on fct_trips
     ├── assert_no_unrealistic_trip_speeds.sql  # business-rule test on fct_trips
-    └── assert_dropoff_after_pickup.sql        # business-rule test on staging
+    ├── assert_dropoff_after_pickup.sql        # business-rule test on staging
+    └── assert_*_dynamics.sql                  # expected data behavior, one per mart (#2, #4, #6-#10)
 ```
 
 | Mart | Answers (`QUESTIONS.md`) | Grain |
@@ -43,6 +51,13 @@ nyc_taxi_dbt/
 | `mart_daily_summary` | daily rollup for dashboards/reports | one row per day |
 | `mart_speed_by_hour_dow` | #5 speed as a congestion proxy | one row per (day of week, hour) |
 | `mart_location_rankings` | busiest/quietest zones | one row per (location type, top/bottom, rank) |
+| `mart_dow_summary` | #2 weekday vs. weekend | one row per day of week |
+| `mart_trip_distance_distribution` | #4 distance distribution / cutoffs | one row per 1-mile bin |
+| `mart_tips_by_payment_type` | #6 tipping by payment type | one row per payment type |
+| `mart_fare_efficiency` | #7 $/mile and $/minute | one row per distance band |
+| `mart_top_corridors` | #8 popular pickup/dropoff pairs | one row per top-25 zone pair |
+| `mart_passenger_count` | #9 passenger count patterns | one row per passenger count |
+| `mart_vendor_comparison` | #10 vendor comparison | one row per vendor |
 
 ## Setup
 

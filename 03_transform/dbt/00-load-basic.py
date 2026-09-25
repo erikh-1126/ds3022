@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import requests
 
@@ -12,3 +13,6 @@ for i in range(1, 13):
     response = requests.get(url)
     path.write_bytes(response.content)
     print(f"Fetched {path.name} ({len(response.content) / 1e6:.1f} MB)")
+
+# Run dbt
+os.system("dbt build")

@@ -1,10 +1,12 @@
 -- Staging: light cleanup and standardization of raw parquet columns.
--- Materialized as a table — pulls all 12 remote parquet files once per
--- rebuild and caches the result locally, so downstream models and ad
--- hoc queries don't re-fetch from the network every time.
+-- Materialized as a view (see dbt_project.yml): nothing is written to
+-- disk here — DuckDB reads the local parquet files directly whenever a
+-- downstream model queries this, pulling only the columns it needs.
 
 with source as (
-    select * from {{ source('raw', 'yellow_tripdata') }}
+    -- `filename` is a DuckDB virtual column (which parquet file each row
+    -- came from); fct_trips uses it to load each monthly file only once
+    select *, filename from {{ source('raw', 'yellow_tripdata') }}
 ),
 
 renamed as (
@@ -20,7 +22,8 @@ renamed as (
         cast(fare_amount as double)             as fare_amount,
         cast(tip_amount as double)              as tip_amount,
         cast(tolls_amount as double)            as tolls_amount,
-        cast(total_amount as double)            as total_amount
+        cast(total_amount as double)            as total_amount,
+        filename                                as source_file
     from source
 )
 
@@ -32,6 +35,10 @@ where
     pickup_at is not null
     and dropoff_at is not null
     and dropoff_at > pickup_at
+    -- pickup must fall in the month named by its file (..._2025-03.parquet):
+    -- drops stray meter-clock dates like 2008 or 2009 inside a 2025 file
+    and strftime(pickup_at, '%Y-%m')
+        = regexp_extract(source_file, '(\d{4}-\d{2})\.parquet$', 1)
     and trip_distance_miles > 0
     and fare_amount > 0
     and passenger_count > 0

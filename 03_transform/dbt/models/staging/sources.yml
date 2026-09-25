@@ -36,22 +36,22 @@ sources:
           #   URLs to DuckDB's read_parquet() instead, one per file —
           #   mix years/months freely since each URL is spelled out. That's
           #   what we do below for all 12 months of 2025.
-          external_location: >
-            read_parquet([
-              'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-01.parquet',
-              'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-02.parquet',
-              'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-03.parquet',
-              'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-04.parquet',
-              'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-05.parquet',
-              'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-06.parquet',
-              'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-07.parquet',
-              'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-08.parquet',
-              'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-09.parquet',
-              'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-10.parquet',
-              'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-11.parquet',
-              'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-12.parquet'
-            ])
-
+          # external_location: >
+          #   read_parquet([
+          #     'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-01.parquet',
+          #     'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-02.parquet',
+          #     'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-03.parquet',
+          #     'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-04.parquet',
+          #     'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-05.parquet',
+          #     'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-06.parquet',
+          #     'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-07.parquet',
+          #     'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-08.parquet',
+          #     'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-09.parquet',
+          #     'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-10.parquet',
+          #     'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-11.parquet',
+          #     'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-12.parquet'
+          #   ])
+          external_location: "data/yellow_tripdata_2025-*.parquet"
 
       - name: taxi_zone_lookup
         description: >

@@ -106,3 +106,210 @@ models:
       - name: trip_count
         tests:
           - not_null
+
+  - name: mart_dow_summary
+    description: >
+      Trip volume, averages, and late-night share by day of week, with an
+      is_weekend flag — the weekday vs. weekend grain for QUESTIONS.md #2.
+    columns:
+      - name: pickup_dow
+        tests:
+          - unique
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1, 2, 3, 4, 5, 6]
+      - name: trip_count
+        tests:
+          - not_null
+      # a calendar year has 52 or 53 of each weekday; more means stray
+      # out-of-period dates leaked into fct_trips
+      - name: day_count
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 52
+                max_value: 53
+      - name: pct_late_night_trips
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+
+  - name: mart_trip_distance_distribution
+    description: >
+      1-mile histogram of trip_distance_miles with cumulative share — the
+      distance-cutoff grain for QUESTIONS.md #4.
+    columns:
+      - name: bin_start_miles
+        tests:
+          - unique
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: trip_count
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+      - name: cumulative_pct
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+
+  - name: mart_tips_by_payment_type
+    description: >
+      Tip amount, tip %, and share of tipped trips by payment type — the
+      card vs. cash tipping grain for QUESTIONS.md #6.
+    columns:
+      - name: payment_type_code
+        tests:
+          - unique
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1, 2, 3, 4, 5, 6]
+      - name: payment_type_name
+        tests:
+          - not_null
+      - name: avg_tip_amount
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: pct_trips_with_tip
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+
+  - name: mart_fare_efficiency
+    description: >
+      Fare per mile and per minute by distance band — the fare-structure
+      grain for QUESTIONS.md #7.
+    columns:
+      - name: distance_band
+        tests:
+          - unique
+          - not_null
+      - name: fleet_fare_per_mile
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: false
+      - name: fleet_fare_per_minute
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: false
+
+  - name: mart_top_corridors
+    description: >
+      Top 25 pickup -> dropoff zone pairs with share and cumulative share
+      of all trips (excludes zones 264/265) — QUESTIONS.md #8.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [pickup_location_id, dropoff_location_id]
+    columns:
+      - name: corridor_rank
+        tests:
+          - unique
+          - not_null
+      # 1-263 are real zones; 264/265 (Unknown / Outside NYC) must be excluded
+      - name: pickup_location_id
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 263
+      - name: dropoff_location_id
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 263
+      - name: pickup_zone
+        tests:
+          - not_null
+      - name: dropoff_zone
+        tests:
+          - not_null
+
+  - name: mart_passenger_count
+    description: >
+      Distance, fare, tipping, and time-of-day mix by passenger count —
+      QUESTIONS.md #9.
+    columns:
+      # 0-passenger trips are meaningless and must be filtered in staging
+      - name: passenger_count
+        tests:
+          - unique
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 9
+
+  - name: mart_vendor_comparison
+    description: >
+      Trip, fare, tipping, and reporting-pattern metrics per vendor —
+      QUESTIONS.md #10.
+    columns:
+      - name: vendor_id
+        tests:
+          - unique
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 6, 7]
+      - name: vendor_name
+        tests:
+          - not_null
+      - name: avg_speed_mph
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 60
+                inclusive: false
+      - name: pct_zero_tip
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: pct_cash
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+
+  - name: mart_pickups_by_zone
+    description: >
+      Pickup (departure) count and share of all trips for every taxi zone
+      (265 rows, zero-filled). Plotted by plots/plot_pickups_by_zone.py.
+    columns:
+      - name: location_id
+        tests:
+          - unique
+          - not_null
+      - name: borough
+        tests:
+          - not_null
+      - name: trip_count
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
