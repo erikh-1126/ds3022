@@ -240,3 +240,10 @@ __marimo__/
 
 # Raw API responses landed by 04_ingest/07_pipeline.py
 04_ingest/data/
+
+
+ds3022/
+duckdb.exe
+03_transform/dbt/profiles.yml
+03_transform/dbt/.user.yml
+03_transform/dbt/logs/
