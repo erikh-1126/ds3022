@@ -28,8 +28,5 @@ def determine_prime_flow():
     raise
 
 if __name__ == "__main__":
-  # Run the flow once, immediately
   determine_prime_flow()
 
-  # Alternative: serve as a scheduled deployment (runs every minute until stopped)
-  # determine_prime_flow.serve(name="scheduled-prime-test", cron="* * * * *")
