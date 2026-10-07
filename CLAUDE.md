@@ -12,6 +12,8 @@ engineering pipeline:
 - `01_data/` — data types, schemas, dataframes
 - `02_query/` — querying, columnar file formats, DuckDB
 - `03_transform/dbt/` — dbt project (staging → marts) on DuckDB
+- `04_apis` - basic and authenticated API calls, parsing of JSON, and pagination
+- `05_prefect` - prefect flows, tasks, etc.
 
 The module structure and content are still actively evolving this semester — feel free
 to propose structural changes, new modules, or reorganizations rather than treating the
@@ -27,6 +29,8 @@ before running Python/dbt commands:
 - If a `uv.lock` or `.venv` created by uv exists, use `uv run` / `uv sync`.
 - Match whichever tool's lock/env files are actually present in the working repo rather
   than defaulting to one.
+- The virtual environment will be found AND SHOULD BE ACTIVATED from the root directory
+  of the project. Nowhere else. Do not create multiple virtual envs within subdirectories.
 
 ## dbt workflow (`03_transform/dbt`)
 
