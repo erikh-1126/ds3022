@@ -30,7 +30,7 @@ print(type(data))
 print(data)
 
 # --- Simple fields ---
-
+age = data['age']
 
 
 # --- Lists ---

@@ -24,8 +24,8 @@ print(json.dumps(commit, indent=2))
 # Objects become dicts (index by key), arrays become lists (index by position or loop).
 #
 # print(commit["sha"])
-# print(commit["commit"]["author"]["name"])
-# print(commit["commit"]["author"]["date"])     # a str -- JSON has no date type
+print(commit["commit"]["author"]["name"])
+print(commit["commit"]["author"]["date"])     # a str -- JSON has no date type
 # print(commit["stats"])                        # nested dict: total, additions, deletions
 # print(len(commit["files"]))                   # list of dicts, one per changed file
 # for f in commit["files"]:
