@@ -8,6 +8,8 @@ URI = 'wss://www.seismicportal.eu/standing_order/websocket'
 def process(message):
     data = json.loads(message)
     info = data['data']['properties']
+    # print full payload before parsing
+    print(info)
     print(f"{data['action']:7} | {info['time']} | Mag {info['mag']} | {info['flynn_region']}")
 
 # Open the websocket and handle messages until the server closes it

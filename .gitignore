@@ -262,4 +262,9 @@ upstream/main
 
 # GH Archive hourly files downloaded by 04_apis/gharchive/00-basic-events.py
 04_apis/gharchive/data/
+
 upstream/main
+
+# Quix Streams local state directory
+state/
+c593738359cce62fe6fa761b154416696a107ffd

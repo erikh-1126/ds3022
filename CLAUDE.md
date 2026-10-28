@@ -14,6 +14,7 @@ engineering pipeline:
 - `03_transform/dbt/` — dbt project (staging → marts) on DuckDB
 - `04_apis` - basic and authenticated API calls, parsing of JSON, and pagination
 - `05_prefect` - prefect flows, tasks, etc.
+- `06_kafka` - streaming data, producers, consumers, offsets, etc.
 
 The module structure and content are still actively evolving this semester — feel free
 to propose structural changes, new modules, or reorganizations rather than treating the
@@ -38,6 +39,11 @@ before running Python/dbt commands:
   `dbt test`, `dbt build`) from `03_transform/dbt/`.
 - `profiles.yml.example` is the template; each student's real `profiles.yml` is local
   and not committed.
+
+## Kafka
+
+- Use the `quixstreams` library by default.
+- Assume the kafka brokers are local, running under `docker compose`.
 
 ## File handling
 
